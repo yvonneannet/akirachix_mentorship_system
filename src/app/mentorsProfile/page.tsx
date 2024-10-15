@@ -90,9 +90,9 @@
 import Layout from '../components/layout';
 import Image from 'next/image';
 
-export default function MentorProfile() {
+export default function MentorsProfile() {
   return (
-    <Layout>
+    <Layout  userProfile={undefined}>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl mb-6">Mentor's Profile</h1>
         <div className="flex flex-col md:flex-row items-center md:items-start">

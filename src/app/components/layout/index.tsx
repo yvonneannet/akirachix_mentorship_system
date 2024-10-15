@@ -1,63 +1,62 @@
+"use client";
 import { useState, ReactNode } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
-import { UserProfile } from '../utils/types';
+import { UserProfile } from '@/app/utils/types';
 
 interface LayoutProps {
   children: ReactNode;
-  userProfile: UserProfile;
+  userProfile?: UserProfile;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, userProfile }) => {
   const router = useRouter();
-  const [showLogout, setShowLogout] = useState(false);
+  const pathname = usePathname();
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
   const isActive = (path: string): string => {
-    return router.pathname === path ? 'text-blue-400' : 'text-black';
+    return pathname === path ? 'text-blue-400' : 'text-black';
   };
 
   const handleLogout = () => {
-    setShowLogout(true);
+    setShowLogoutConfirmation(true);
   };
 
   const confirmLogout = () => {
-    // Implement logout logic here
+    
+    localStorage.removeItem('userToken'); 
+    
+   
     router.push('/login');
+  };
+
+  const cancelLogout = () => {
+   
+    setShowLogoutConfirmation(false);
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <nav className="flex justify-between items-center p-4 bg-white">
-        <Link href="/">
-          <a className="text-2xl italic font-abeezee">AkiraChix</a>
+        <Link href="/" className="text-2xl italic font-abeezee">
+          AkiraChix
         </Link>
         <div className="hidden md:flex space-x-4">
-          <Link href="/mentor-profile">
-            <a className={`${isActive('/mentor-profile')}`}>Mentor's Profile</a>
+          <Link href="/mentorsProfile" className={`${isActive('/mentorsprofile')}`}>
+            Mentor's Profile
           </Link>
-          <Link href="/todo">
-            <a className={`${isActive('/todo')}`}>To-Do</a>
+          <Link href="/to-do" className={`${isActive('/todo')}`}>
+            To-Do
           </Link>
-          <Link href="/goals">
-            <a className={`${isActive('/goals')}`}>Goals</a>
+          <Link href="/goals" className={`${isActive('/goals')}`}>
+            Goals
           </Link>
-          <Link href="/achievements">
-            <a className={`${isActive('/achievements')}`}>Achievements</a>
+          <Link href="/achievements" className={`${isActive('/achievements')}`}>
+            Achievements
           </Link>
         </div>
         <div className="relative">
           <button onClick={handleLogout} className="w-8 h-8 bg-gray-300 rounded-full"></button>
-          {showLogout && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-              <button onClick={confirmLogout} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                Logout
-              </button>
-              <button onClick={() => setShowLogout(false)} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                Cancel
-              </button>
-            </div>
-          )}
         </div>
       </nav>
       <main className="flex-grow p-4">
@@ -65,9 +64,37 @@ const Layout: React.FC<LayoutProps> = ({ children, userProfile }) => {
       </main>
       <footer className="bg-white p-4 text-center text-sm">
         <p>© AkiraChix 2024. All Rights Reserved</p>
-        <p>Signed in as: {userProfile.email}</p>
-        <p>Geolocation: {userProfile.location}</p>
+        {userProfile && (
+          <>
+            <p>Signed in as: {userProfile.email}</p>
+            <p>Geolocation: {userProfile.location}</p>
+          </>
+        )}
       </footer>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Confirm Logout</h2>
+            <p className="mb-4">Are you sure you want to log out?</p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={cancelLogout}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
+"use client";
 import { useState } from 'react';
-import Layout from '../components/ayout';
+import Layout from '../components/layout';
 
 export default function Goals() {
   const [goals, setGoals] = useState({
