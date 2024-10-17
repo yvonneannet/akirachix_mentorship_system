@@ -1,11 +1,15 @@
+
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
-import Link from 'next/link'; 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ABeeZee } from "next/font/google";
+
+const aBeeZee = ABeeZee({ weight: '400', subsets: ['latin'] });
 
 const signUpSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -41,19 +45,15 @@ export default function SignupPage() {
     setSuccessMessage('');
 
     try {
-      // Check if the email is already registered
       const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
       if (existingUsers.some((user: FormData) => user.email === data.email)) {
         throw new Error('Email already registered');
       }
 
-      // Store the new user
       existingUsers.push(data);
       localStorage.setItem('users', JSON.stringify(existingUsers));
 
       setSuccessMessage('Registration successful! Redirecting to login...');
-      
-      // Redirect to login page after a short delay
       setTimeout(() => {
         router.push('/login');
       }, 2000);
@@ -65,113 +65,127 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Join the AkiraChix Mentorship Community
-          </h2>
+    <div className={`min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8 ${aBeeZee.className}`}>
+      <div className="max-w-2xl w-full">
+        {/* Top Left Logo */}
+        <div className="text-left mb-6">
+          <h1 className="text-3xl sm:text-4xl font-bold text-cyan-500 italic">
+            <span className="text-black">Akira</span><span className="text-blue-500">Chix</span>
+          </h1>
         </div>
-        
+
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-blue-500">
+            Join the <span className="text-black">Akira</span>Chix <br /> Mentorship Community
+          </h2>
+          <hr className="border-t-4 border-gray-900 mt-6 sm:mt-12 w-28 sm:w-36 mb-8 sm:mb-12 mx-auto" />
+        </div>
+
+        {/* Error/Success Message */}
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{errorMessage}</span>
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span>{errorMessage}</span>
           </div>
         )}
-        
+
         {successMessage && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{successMessage}</span>
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span>{successMessage}</span>
           </div>
         )}
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <input type="hidden" name="remember" value="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="full-name" className="sr-only">Full Name</label>
-              <input
-                id="full-name"
-                {...register("fullName")}
-                type="text"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Full Name"
-              />
-              {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
-              <input
-                id="email-address"
-                {...register("email")}
-                type="email"
-                autoComplete="email"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="username" className="sr-only">Username</label>
-              <input
-                id="username"
-                {...register("username")}
-                type="text"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
-              />
-              {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                id="password"
-                {...register("password")}
-                type="password"
-                autoComplete="new-password"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="student-id" className="sr-only">Student ID/Code</label>
-              <input
-                id="student-id"
-                {...register("studentId")}
-                type="text"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Student ID/Code"
-              />
-              {errors.studentId && <p className="text-red-500 text-xs mt-1">{errors.studentId.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="confirm-password" className="sr-only">Confirm Password</label>
-              <input
-                id="confirm-password"
-                {...register("confirmPassword")}
-                type="password"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm Password"
-              />
-              {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
-            </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 sm:gap-y-8 sm:gap-x-6">
+          <div className="flex flex-col">
+            <label htmlFor="full-name" className="block text-sm font-medium">Full Name</label>
+            <input
+              id="full-name"
+              {...register("fullName")}
+              type="text"
+              className="w-full px-3 py-2 border border-blue-500 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Full Name"
+            />
+            {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
           </div>
 
-          <div>
+          <div className="flex flex-col">
+            <label htmlFor="email-address" className="block text-sm font-medium">Email</label>
+            <input
+              id="email-address"
+              {...register("email")}
+              type="email"
+              className="w-full px-3 py-2 border border-blue-500 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Email"
+            />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="username" className="block text-sm font-medium">Username</label>
+            <input
+              id="username"
+              {...register("username")}
+              type="text"
+              className="w-full px-3 py-2 border border-blue-500 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Username"
+            />
+            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="password" className="block text-sm font-medium">Password</label>
+            <input
+              id="password"
+              {...register("password")}
+              type="password"
+              className="w-full px-3 py-2 border border-blue-500 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Password"
+            />
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="student-id" className="block text-sm font-medium">Student ID/Code</label>
+            <input
+              id="student-id"
+              {...register("studentId")}
+              type="text"
+              className="w-full px-3 py-2 border border-blue-500 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Student ID/Code"
+            />
+            {errors.studentId && <p className="text-red-500 text-xs mt-1">{errors.studentId.message}</p>}
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="confirm-password" className="block text-sm font-medium">Confirm Password</label>
+            <input
+              id="confirm-password"
+              {...register("confirmPassword")}
+              type="password"
+              className="w-full px-3 py-2 border border-blue-500 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Confirm Password"
+            />
+            {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword.message}</p>}
+          </div>
+
+          {/* Sign Up Button */}
+          <div className="col-span-2 flex justify-center mt-4">
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-32 py-3 px-4 bg-black text-white rounded-md font-medium hover:bg-gray-800"
               disabled={loading}
             >
               {loading ? "Signing up..." : "Sign Up"}
             </button>
           </div>
         </form>
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+
+        {/* Bottom Text */}
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-700">
+            Already have an account?{" "}
+            <Link href="/login" className="text-blue-600 hover:text-blue-500">
               Login
             </Link>
           </p>
@@ -180,3 +194,7 @@ export default function SignupPage() {
     </div>
   );
 }
+
+
+
+

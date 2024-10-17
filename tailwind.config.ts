@@ -12,8 +12,12 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        ABeeZee: ['"ABeeZee"', 'sans-serif'], // Add the ABeeZee font here
+      },
     },
   },
   plugins: [],
 };
+
 export default config;
