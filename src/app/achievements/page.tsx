@@ -5,10 +5,7 @@ import { useState } from 'react';
 import Layout from '../components/layout';
 
 export default function Achievements() {
-    const [achievements, setAchievements] = useState([
-        "Got an internship with Flo Health",
-        "Did workouts for two weeks without skipping",
-    ]);
+    const [achievements, setAchievements] = useState<string[]>([]);  
     const [newAchievement, setNewAchievement] = useState('');
     const [isEditing, setIsEditing] = useState<number | null>(null);
     const [editedAchievement, setEditedAchievement] = useState('');
@@ -49,7 +46,6 @@ export default function Achievements() {
                     Document Your Achievements
                 </h1>
 
-                {/* Input and Button for New Achievement */}
                 <div className="mb-4 flex flex-col sm:flex-row">
                     <input
                         type="text"
