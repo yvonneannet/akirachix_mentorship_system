@@ -427,7 +427,6 @@ import Link from 'next/link';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Head from 'next/head';
 import { ABeeZee } from "next/font/google";
 
 const aBeeZee = ABeeZee({ weight: '400', subsets: ['latin'] });
