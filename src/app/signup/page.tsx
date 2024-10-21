@@ -67,22 +67,22 @@ export default function SignupPage() {
   return (
     <div className={`min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8 ${aBeeZee.className}`}>
       <div className="max-w-2xl w-full">
-        {/* Top Left Logo */}
-        <div className="text-left mb-6">
+        
+        <div className="text-left absolute top-10 left-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-cyan-500 italic">
             <span className="text-black">Akira</span><span className="text-blue-500">Chix</span>
           </h1>
         </div>
 
-        {/* Heading */}
-        <div className="text-center mb-8">
+      
+        <div className="text-center -mt-28">
           <h2 className="text-2xl sm:text-3xl font-bold text-blue-500">
             Join the <span className="text-black">Akira</span>Chix <br /> Mentorship Community
           </h2>
           <hr className="border-t-4 border-gray-900 mt-6 sm:mt-12 w-28 sm:w-36 mb-8 sm:mb-12 mx-auto" />
         </div>
 
-        {/* Error/Success Message */}
+        
         {errorMessage && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
             <span>{errorMessage}</span>
